@@ -6,11 +6,14 @@
 
                 <div class="img">
                     {{#if std_detail.student_photo}}
-                    <img class="photo_detail card-img-top" src="{{trimString std_detail.student_photo.0.path}}" />
+                     <a href="/student/edit-student/{{std_detail._id}}"><i 
+                     class="fas fa-edit position-absolute"></i></a>
+
+                    <img class="photo_detail card-img-top" src="{{trimString std_detail.student_photo.0.path}}"/>
                     {{else}}
 
                     <img class="photo_detail card-img-top"
-                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" />
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"/>
 
 
                     {{/if}}
@@ -34,7 +37,14 @@
                     </div>
                 </div>
                 <div class="profile-more">
-                    <h5>Show more</h5>
+                <div class="btn-group">
+                    {{!-- <button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i>"</button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>"</button> --}}
+                    <form action="/student/student-delete/{{std_detail._id}}?_method=DELETE" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button class="btn btn-danger "><i class="fas fa-trash" aria-hidden="true"></i>"</button>
+                    </form>
+                </div>
                 </div>
             </div>
             <div class="last-view grid-area">

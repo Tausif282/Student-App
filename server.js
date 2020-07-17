@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const Handlebars = require("handlebars");
+const flash = require('connect-flash');
+const session = require('express-session')
+const methodOverride = require('method-override')
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 
@@ -10,6 +13,8 @@ const app = express();
 
 // import students routes
 const student = require("./Routes/students");
+//import auth routes
+const auth=require('./Routes/auth')
 
 // handlebars helper middlewares
 Handlebars.registerHelper("trimString", function (passedString) {
@@ -42,6 +47,31 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//express session midlleware
+app.use(session({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true,
+ 
+}))
+;
+app.use(flash());
+
+//set global variable to  acess any where in application
+app.use(function(req,res,next){
+  res.locals.success_msg=req.flash("success_msg");
+  res.locals.errors_msg=req.flash("errors_msg");
+  res.locals.errors=req.flash("errors");
+  next();
+
+})
+
+
+
+//method override Middleware here...
+ // override with POST having ?_method=DELETE
+  app.use(methodOverride('_method'))
+
 //home routes can add in server.js file only
 app.get("/", (req, res) => {
   res.render("home.handlebars");
@@ -49,7 +79,7 @@ app.get("/", (req, res) => {
 
 //use application level middleware app.use
 app.use("/student", student);
-
+app.use("/auth",auth);
 // page not found route
 app.get("**", (req, res) => {
   res.render("pagenotfound.handlebars");
